@@ -1,10 +1,14 @@
 import express from "express";
 import bodyParser from 'body-parser';
-import usersRoutes from "./routes/users.js";
 import cors from "cors";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import dotenv from 'dotenv'
+
+import usersRoutes from "./routes/users.js";
+import donationRoutes from './routes/donations.js';
+import requireAuth from '../middleware/authMiddleware.js';
+
 
 dotenv.config()
 mongoose.connect(process.env.MONGO_URL, () => {
@@ -12,12 +16,7 @@ mongoose.connect(process.env.MONGO_URL, () => {
 });
 
 const app = express();
-const PORT = 5000;
-
-// var corsOptions = {
-//     origin: `http://localhost:${PORT}`
-
-// }
+const PORT = process.env.PORT;
 
 app.use(cookieParser());
 app.use(cors({
@@ -26,5 +25,6 @@ app.use(cors({
 }));
 app.use(bodyParser.json());
 app.use("/users", usersRoutes);
+app.use("/donation",requireAuth, donationRoutes);
 
 app.listen(PORT, () => console.log(`Server is runnning on port : http://localhost:${PORT}`));

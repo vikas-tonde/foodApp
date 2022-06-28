@@ -1,29 +1,25 @@
 import express from "express";
 import bcrypt from 'bcryptjs';
 import { User } from '../models/users.js'
+import requireAuth from '../middleware/authMiddleware.js';
 
 import pkg from "jsonwebtoken";
 const Jwt = pkg;
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-    try {
-        const cookie = req.cookies['jwt'];
-        const claims = Jwt.verify(cookie, "secret");
-        if (!claims) {
-            return res.status(401).send({
-                messaage: "Unauthenticated"
-            });
-        }
-        const user = await User.findOne({ _id: claims._id });
-        const { password, ...data } = await user.toJSON();
-        res.send(data);
-    } catch (e) {
-        return res.status(401).send({
-            messaage: "Unauthenticated"
+router.get('/', requireAuth, async (req, res) => {
+    const cookie = req.cookies['jwt'];
+    const claims = Jwt.verify(cookie, "secret");
+
+    const user = await User.findOne({ _id: claims._id });
+    if (!user) {
+        return res.status(404).send({
+            messaage: "user not found"
         });
     }
+    const { password, ...data } = await user.toJSON();
+    res.send(data);
 });
 
 router.post('/register', (req, res) => {
@@ -33,7 +29,8 @@ router.post('/register', (req, res) => {
         const user = new User({
             name: req.body.name,
             email: req.body.email,
-            password: hashedPassword
+            password: hashedPassword,
+            role: req.body.role
         })
         const result = await user.save();
         const { password, ...data } = result.toJSON();
