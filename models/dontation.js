@@ -8,6 +8,14 @@ const item = new Schema(
         required: true
     }
 );
+
+const location = new Schema(
+    {
+        longitude: String,
+        latitude: String,
+        required: true
+    }
+);
 const donationSchema = new mongoose.Schema(
     {
         items: [item],
@@ -21,7 +29,7 @@ const donationSchema = new mongoose.Schema(
             ref: 'User'
         },
         location: {
-            type: String,
+            type: location,
             required: true
         }
     }, { collection: 'Donation' }
