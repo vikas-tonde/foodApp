@@ -1,19 +1,18 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
-var schema = mongoose.Schema;
-var o = schema.objectId;
+const Schema = mongoose.Schema;
+const o = Schema.ObjectId;
 const item = new Schema(
     {
         name: String,
-        required: true
+        // required: true
     }
 );
 
 const location = new Schema(
     {
         longitude: String,
-        latitude: String,
-        required: true
+        latitude: String, 
     }
 );
 const donationSchema = new mongoose.Schema(

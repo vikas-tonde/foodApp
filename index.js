@@ -7,7 +7,7 @@ import dotenv from 'dotenv'
 
 import usersRoutes from "./routes/users.js";
 import donationRoutes from './routes/donations.js';
-import requireAuth from '../middleware/authMiddleware.js';
+import requireAuth from './middleware/authMiddleware.js';
 
 
 dotenv.config()
