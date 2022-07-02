@@ -8,13 +8,13 @@ import dotenv from 'dotenv'
 import usersRoutes from "./routes/users.js";
 import donationRoutes from './routes/donations.js';
 import requireAuth from './middleware/authMiddleware.js';
-
+import donorAuth from './middleware/donorMiddleware.js'
 
 dotenv.config()
+
 mongoose.connect(process.env.MONGO_URL, () => {
     console.log("Database connected");
 });
-
 const app = express();
 const PORT = process.env.PORT;
 
@@ -25,6 +25,6 @@ app.use(cors({
 }));
 app.use(bodyParser.json());
 app.use("/users", usersRoutes);
-app.use("/donation",requireAuth, donationRoutes);
+app.use("/donation", requireAuth, donorAuth, donationRoutes);
 
 app.listen(PORT, () => console.log(`Server is runnning on port : http://localhost:${PORT}`));

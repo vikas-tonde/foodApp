@@ -5,15 +5,15 @@ const o = Schema.ObjectId;
 const item = new Schema(
     {
         name: String,
-        // required: true
-    }
+    }, { _id: false }
 );
 
 const location = new Schema(
     {
         longitude: String,
-        latitude: String, 
-    }
+        latitude: String,
+    },
+    { _id: false }
 );
 const donationSchema = new mongoose.Schema(
     {
@@ -31,7 +31,7 @@ const donationSchema = new mongoose.Schema(
             type: location,
             required: true
         }
-    }, { collection: 'Donation' }
+    }, { collection: 'Donation', versionKey: false }
 );
 
 export const Donation = mongoose.model('Donation', donationSchema);
