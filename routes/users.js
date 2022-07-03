@@ -54,13 +54,11 @@ router.post("/login", async (req, res) => {
             messaage: "Invalid Credentials"
         });
     }
-    const token = Jwt.sign({ _id: user._id }, "secret")
-    res.cookie('jwt', token, {
-        httpOnly: true,
-        maxAge: 12 * 60 * 60 * 1000
+    const token = Jwt.sign({ _id: user._id }, "secret", {
+        expiresIn: 86400 // expires in 24 hours
     });
     res.send({
-        message: "success"
+        jwt: token
     });
 });
 
