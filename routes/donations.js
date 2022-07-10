@@ -6,8 +6,8 @@ const Jwt = pkg;
 const router = new express.Router();
 
 router.post("/add", async (req, res) => {
-    const cookie = req.cookies['jwt'];
-    const claims = await Jwt.verify(cookie, "secret");
+    const token = req.headers.authorization;
+    const claims = await Jwt.verify(token, "secret");
 
     const donation = new Donation({
         donor: claims._id,
@@ -29,9 +29,11 @@ router.post("/add", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
+    const token = req.headers.authorization;
+    const claims = await Jwt.verify(token, "secret");
     const pageSize = 4;
     var pagenumber = req.query.page;
-    var result = await Donation.find({}, { '_id': 0 })
+    var result = await Donation.find({"_id" : claims._id})
         .limit(pageSize)
         .skip((pagenumber - 1) * pageSize)
         .exec();

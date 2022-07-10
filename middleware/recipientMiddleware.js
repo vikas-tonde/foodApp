@@ -4,7 +4,7 @@ import { User } from "../models/users.js";
 const Jwt = pkg;
 
 const recipientAuth = async (req, res, next) => {
-    const token = req.cookies.jwt;
+    const token = req.headers.authorization;
     const claims = await Jwt.verify(token, "secret");
     const user = await User.findOne({ _id: claims._id });
     if (!user) {
