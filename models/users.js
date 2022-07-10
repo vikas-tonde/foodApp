@@ -28,17 +28,18 @@ const userSchema = new mongoose.Schema(
             required: true
         },
         adhaarNumber: {
-            type: Number,
+            type: String,
+            unique: true,
             required: true,
-            length: 12,
-            unique: true
+            maxlength: 12,
+            minlength:12
         },
         address: {
             type: String,
             required: true,
         },
         location:{
-            type:Location,
+            type:Location,  
             required:true
         }
     }, { collection: 'User' }

@@ -30,7 +30,10 @@ router.post('/register', (req, res) => {
             name: req.body.name,
             email: req.body.email,
             password: hashedPassword,
-            role: req.body.role
+            role: req.body.role,
+            adhaarNumber: req.body.adhaarNumber,
+            address: req.body.address,
+            location:req.body.location
         })
         const result = await user.save();
         const { password, ...data } = result.toJSON();
