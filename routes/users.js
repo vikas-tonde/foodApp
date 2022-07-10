@@ -61,7 +61,9 @@ router.post("/login", async (req, res) => {
         expiresIn: 86400 // expires in 24 hours
     });
     res.send({
-        jwt: token
+        jwt: token,
+        role: user.role,
+        name: user.name
     });
 });
 
