@@ -30,6 +30,10 @@ const donationSchema = new mongoose.Schema(
         location: {
             type: location,
             required: true
+        },
+        dateAdded:{
+            type: Date,
+            default: Date.now()
         }
     }, { collection: 'Donation', versionKey: false }
 );
