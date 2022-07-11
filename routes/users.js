@@ -9,8 +9,8 @@ const Jwt = pkg;
 const router = express.Router();
 
 router.get('/', requireAuth, async (req, res) => {
-    const cookie = req.cookies['jwt'];
-    const claims = Jwt.verify(cookie, "secret");
+    const token = req.headers.authorization;
+    const claims = Jwt.verify(token, "secret");
 
     const user = await User.findOne({ _id: claims._id });
     if (!user) {
@@ -67,11 +67,21 @@ router.post("/login", async (req, res) => {
     });
 });
 
-router.post("/logout", (req, res) => {
-    res.cookie('jwt', '', { maxAge: 0 });
-    res.send({
-        messaage: "You have been logged out"
-    });
+// router.post("/logout", (req, res) => {
+//     res.cookie('jwt', '', { maxAge: 0 });
+//     res.send({
+//         messaage: "You have been logged out"
+//     });
+// });
+
+router.post('/forgot',(req, res)=>{
+    const user = await User.findOne({ email: req.body.email }); 
+    if (!user) {
+        return res.status(404).send({
+            messaage: "user not found"
+        });
+    }
+    
 });
 
 export default router;
