@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from 'bcryptjs';
 import { User } from '../models/users.js'
 import requireAuth from '../middleware/authMiddleware.js';
+import NodeMailer from 'nodemailer';
 
 import pkg from "jsonwebtoken";
 const Jwt = pkg;
@@ -33,7 +34,7 @@ router.post('/register', (req, res) => {
             role: req.body.role,
             adhaarNumber: req.body.adhaarNumber,
             address: req.body.address,
-            location:req.body.location
+            location: req.body.location
         })
         const result = await user.save();
         const { password, ...data } = result.toJSON();
@@ -74,14 +75,39 @@ router.post("/login", async (req, res) => {
 //     });
 // });
 
-router.post('/forgot',(req, res)=>{
-    const user = await User.findOne({ email: req.body.email }); 
+router.post('/forgot', async (req, res) => {
+    const user = await User.findOne({ email: req.body.email });
     if (!user) {
         return res.status(404).send({
-            messaage: "user not found"
+            messaage: "User not found"
         });
     }
-    
+    let transporter = NodeMailer.createTransport({
+        // host:"",
+        // port:"",
+        // secure: false, //true for 465 and false for other
+        service: "gmail",
+        auth: {
+            user: "tondev98@gmail.com",
+            pass: "*vikas@123"
+        }
+    });
+    let details = {
+        from: "tondev98@gmail.com",
+        to: req.body.email,
+        subject: "Reset your Password",
+        text: "Your OTP is :"
+    }
+    await transporter.sendMail(details, (err) => {
+        if (err) {
+            res.status(400).send({
+                messaage: "Error occured"
+            });
+        }
+        res.status(200).send({
+            messaage: "OTP has been send check your mail"
+        });
+    });
 });
 
 export default router;
