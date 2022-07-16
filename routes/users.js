@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { User } from '../models/users.js'
 import requireAuth from '../middleware/authMiddleware.js';
 import NodeMailer from 'nodemailer';
+import generateOTP from "../heplers/generateOtp.js";
 
 import pkg from "jsonwebtoken";
 const Jwt = pkg;
@@ -82,23 +83,22 @@ router.post('/forgot', async (req, res) => {
             messaage: "User not found"
         });
     }
+    const otp= generateOTP();
+    await User.updateOne({email:user.email}, {otp:otp});
     let transporter = NodeMailer.createTransport({
-        // host:"",
-        // port:"",
-        // secure: false, //true for 465 and false for other
         service: "gmail",
         auth: {
             user: "tondev98@gmail.com",
-            pass: "*vikas@123"
+            pass: "onnqgmddgamvdjbj"
         }
     });
     let details = {
         from: "tondev98@gmail.com",
         to: req.body.email,
         subject: "Reset your Password",
-        text: "Your OTP is :"
+        text: "Your OTP is :" + otp
     }
-    await transporter.sendMail(details, (err) => {
+    transporter.sendMail(details, (err) => {
         if (err) {
             res.status(400).send({
                 messaage: "Error occured"

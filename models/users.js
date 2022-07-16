@@ -41,6 +41,14 @@ const userSchema = new mongoose.Schema(
         location:{
             type:Location,  
             required:true
+        },
+        forgot:{
+            type:Boolean,
+            default:false
+        },
+        otp:{
+            type:Number,
+            required:false
         }
     }, { collection: 'User' }
 );
