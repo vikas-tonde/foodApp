@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { User } from '../models/users.js'
 import requireAuth from '../middleware/authMiddleware.js';
 import NodeMailer from 'nodemailer';
-import generateOTP from "../heplers/generateOtp.js";
+import generateOTP from "../helpers/generateOtp.js";
 
 import pkg from "jsonwebtoken";
 const Jwt = pkg;

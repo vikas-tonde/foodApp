@@ -2,12 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 var schema = mongoose.Schema;
 var o = schema.objectId;
-const item = new Schema(
-    {
-        name: String,
-        required: true
-    }
-);
+
 const feedbackSchema = new mongoose.Schema(
     {
         donationId: {

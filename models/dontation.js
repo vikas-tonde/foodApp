@@ -5,6 +5,8 @@ const o = Schema.ObjectId;
 const item = new Schema(
     {
         name: String,
+        quantity: Number,
+        expiry: Number
     }, { _id: false }
 );
 
@@ -31,10 +33,14 @@ const donationSchema = new mongoose.Schema(
             type: location,
             required: true
         },
-        dateAdded:{
+        dateAdded: {
             type: Date,
             default: Date.now()
-        }
+        },
+        address: {
+            type: String,
+            required: true,
+        },
     }, { collection: 'Donation', versionKey: false }
 );
 

@@ -11,10 +11,11 @@ router.post("/add", async (req, res) => {
 
     const donation = new Donation({
         donor: claims._id,
-        location: req.body.location
+        location: req.body.location,
+        address: req.body.address
     });
     req.body.items.forEach(element => {
-        donation.items.push({ name: element });
+        donation.items.push({ name: element.name, quantity:element.quantity, expiry:element.expiry });
     });
     await donation.save((err, result) => {
         if (err) {
