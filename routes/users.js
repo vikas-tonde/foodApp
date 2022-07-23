@@ -1,12 +1,12 @@
 import express from "express";
 import bcrypt from 'bcryptjs';
 import NodeMailer from 'nodemailer';
+import pkg from "jsonwebtoken";
 
 import { User } from '../models/users.js'
 import requireAuth from '../middleware/authMiddleware.js';
 import generateOTP from "../helpers/generateOtp.js";
 
-import pkg from "jsonwebtoken";
 const Jwt = pkg;
 
 const router = express.Router();
