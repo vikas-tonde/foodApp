@@ -8,7 +8,7 @@ const router = new express.Router();
 router.get("/", async (req, res) => {
     const pageSize = 9;
     var pagenumber = req.query.page;
-    var result = await Donation.find({}, { '_id': 0 })
+    var result = await Donation.find({recipient:{$exists:false}})
         .limit(pageSize)
         .skip((pagenumber - 1) * pageSize)
         .exec();

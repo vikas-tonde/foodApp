@@ -14,7 +14,6 @@ const storage = multer.diskStorage({
     }
 });
 const fileFilter = (req, file, cb) => {
-    // reject a file
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
         cb(null, true);
     } else {
@@ -32,7 +31,6 @@ const upload = multer({
 router.post("/add", upload.array('image'), async (req, res) => {
     const token = req.headers.authorization;
     const claims = await Jwt.verify(token, "secret");
-    console.log(req.files);
     const donation = new Donation({
         donor: claims._id,
         location: req.body.location,
@@ -69,7 +67,7 @@ router.get("/", async (req, res) => {
     const claims = await Jwt.verify(token, "secret");
     const pageSize = 4;
     var pagenumber = req.query.page;
-    var result = await Donation.find({ "_id": claims._id })
+    var result = await Donation.find({ "donor": claims._id })
         .limit(pageSize)
         .skip((pagenumber - 1) * pageSize)
         .exec();
