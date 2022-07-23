@@ -1,24 +1,58 @@
 import express from "express";
 import { Donation } from '../models/dontation.js'
 import pkg from "jsonwebtoken";
+import multer from "multer";
 
 const Jwt = pkg;
 const router = new express.Router();
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '../uploads');
+    },
+    filename: function (req, file, cb) {
+        cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
+    }
+});
+const fileFilter = (req, file, cb) => {
+    // reject a file
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+};
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
+});
 
-router.post("/add", async (req, res) => {
+router.post("/add", upload.array('image'), async (req, res) => {
     const token = req.headers.authorization;
     const claims = await Jwt.verify(token, "secret");
-
+    console.log(req.files);
     const donation = new Donation({
         donor: claims._id,
         location: req.body.location,
         address: req.body.address
     });
     req.body.items.forEach(element => {
-        donation.items.push({ name: element.name, quantity:element.quantity, expiry:element.expiry });
+        donation.items.push({
+            name: element.name,
+            quantity: element.quantity,
+            expiry: element.expiry
+        });
     });
+    if(req.files.length){
+        req.files.forEach(element=>{
+            donation.images.push(element.path);
+        });
+    }
     await donation.save((err, result) => {
         if (err) {
+            console.log(err);
             return res.status(400).send({
                 messaage: "Failed to add the donation details"
             });
@@ -27,6 +61,7 @@ router.post("/add", async (req, res) => {
             messaage: "Success"
         });
     });
+
 });
 
 router.get("/", async (req, res) => {
@@ -34,7 +69,7 @@ router.get("/", async (req, res) => {
     const claims = await Jwt.verify(token, "secret");
     const pageSize = 4;
     var pagenumber = req.query.page;
-    var result = await Donation.find({"_id" : claims._id})
+    var result = await Donation.find({ "_id": claims._id })
         .limit(pageSize)
         .skip((pagenumber - 1) * pageSize)
         .exec();
