@@ -15,7 +15,7 @@ const location = new Schema(
         longitude: String,
         latitude: String,
     },
-    { _id: false } 
+    { _id: false }
 );
 const donationSchema = new mongoose.Schema(
     {
@@ -41,8 +41,8 @@ const donationSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        images:[{
-            type:String
+        images: [{
+            type: String
         }]
     }, { collection: 'Donation', versionKey: false }
 );
