@@ -14,7 +14,7 @@ const adminAuth = async (req, res, next) => {
     }
     if(user.role!="admin"){
         return res.status(403).send({
-            messaage: "You are not allowed to access this URL"
+            messaage: "You are not authorized to access this URL"
         });
     }
     next();
