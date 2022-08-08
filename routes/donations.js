@@ -93,4 +93,23 @@ router.get("/", async (req, res) => {
 //     // students contain WorksnapsTimeEntries
 // });
 
+
+router.get("/history", async (req, res) => {
+    const token = req.headers.authorization;
+    const claims = await Jwt.verify(token, "secret");
+    const pageSize = 9;
+    var pagenumber = req.query.page;
+    var result = await Donation.find({ donor: claims_id })
+        .limit(pageSize)
+        .skip((pagenumber - 1) * pageSize)
+        .exec();
+
+    if (!result) {
+        return res.status(404).send({ message: "You haven't accepted any dination yet." });
+    }
+    return res.status(200).send({
+        data: result
+    });
+})
+
 export default router;
