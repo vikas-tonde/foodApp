@@ -46,6 +46,17 @@ router.get("/user", async (req, res) => {
     });
 });
 
+router.get("/donation", async (req, res) => {
+
+    var id = req.query._id;
+    var result = await User.find({ _id: id });
+    if (!result) {
+        return res.status(404).send({ message: "Invalid Id.. No donation found" });
+    }
+    return res.status(200).send({
+        data: result
+    });
+});
 
 
 export default router;
