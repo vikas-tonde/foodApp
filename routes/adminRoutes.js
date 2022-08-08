@@ -34,6 +34,18 @@ router.get("/users", async (req, res) => {
     });
 });
 
+router.get("/user", async (req, res) => {
+
+    var email = req.query.email;
+    var result = await User.find({ "email": email });
+    if (!result) {
+        return res.status(404).send({ message: "Invalid Email ID.. No User found" });
+    }
+    return res.status(200).send({
+        data: result
+    });
+});
+
 
 
 export default router;
