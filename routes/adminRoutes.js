@@ -58,9 +58,14 @@ router.get("/donation", async (req, res) => {
     });
 });
 
-router.get("/donations/count",async (req, res)=>{
+router.get("/donations/count", async (req, res) => {
     var count = await Donation.estimatedDocumentCount();
-    return res.status(200).send({"count of donations": count});
+    return res.status(200).send({ "count of donations": count });
+});
+
+router.get("/users/count", async (req, res) => {
+    var count = await User.estimatedDocumentCount();
+    return res.status(200).send({ "count of donations": count });
 });
 
 export default router;
