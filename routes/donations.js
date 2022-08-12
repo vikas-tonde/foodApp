@@ -97,15 +97,31 @@ router.get("/", async (req, res) => {
 router.get("/history", async (req, res) => {
     const token = req.headers.authorization;
     const claims = await Jwt.verify(token, "secret");
+    var result = await Donation.find({ donor: claims._id })
+
+    if (!result) {
+        return res.status(404).send({ message: "You haven't accepted any donation yet." });
+    }
+    return res.status(200).send({
+        data: result
+    });
+})
+
+router.post("/history", async (req, res) => {
+    /*
+    date format: YYYY-MM-DD
+    */
+    const token = req.headers.authorization;
+    const claims = await Jwt.verify(token, "secret");
     const pageSize = 9;
     var pagenumber = req.query.page;
-    var result = await Donation.find({ donor: claims_id })
+    var result = await Donation.find({ donor: claims._id })
         .limit(pageSize)
         .skip((pagenumber - 1) * pageSize)
         .exec();
 
     if (!result) {
-        return res.status(404).send({ message: "You haven't accepted any dination yet." });
+        return res.status(404).send({ message: "You haven't accepted any donation yet." });
     }
     return res.status(200).send({
         data: result
