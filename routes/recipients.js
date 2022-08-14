@@ -19,8 +19,8 @@ router.post("/search", async (req, res) => {
         filter['city'] = req.body.city;
     }
     if ("dateFilter" in req.body) {
-        let d=new Date(req.body.dateFilter)
-        filter['dateAdded']={ $gte:new Date(req.body.dateFilter) , $lte:new Date(d.setDate(d.getDate()+1))};
+        let d = new Date(req.body.dateFilter)
+        filter['dateAdded'] = { $gte: new Date(req.body.dateFilter), $lte: new Date(d.setDate(d.getDate() + 1)) };
 
     }
     let result = await Donation.find(filter);
@@ -32,7 +32,7 @@ router.post("/search", async (req, res) => {
 
 router.get("/search", async (req, res) => {
     let id = req.query.id;
-    let filter = { recipient: { $exists: false },_id:id}
+    let filter = { recipient: { $exists: false }, _id: id }
 
     let result = await Donation.find(filter);
 
@@ -60,8 +60,6 @@ router.post("/accept", async (req, res) => {
 router.get("/history", async (req, res) => {
     const token = req.headers.authorization;
     const claims = await Jwt.verify(token, "secret");
-    const pageSize = 9;
-    var pagenumber = req.query.page;
     var result = await Donation.find({ recipient: claims._id })
 
     if (!result) {
@@ -69,6 +67,28 @@ router.get("/history", async (req, res) => {
     }
     return res.status(200).send({
         data: result
+    });
+})
+
+router.post("/history", async (req, res) => {
+    /*
+    date format: YYYY-MM-DD
+    */
+    const token = req.headers.authorization;
+    const claims = await Jwt.verify(token, "secret");
+    let to = new Date(req.body.to);
+    let from = new Date(req.body.from);
+    var data = await Donation.find({
+        recipient: claims._id, dateAdded: {
+            $gte: from,
+            $lte: to
+        }
+    })
+    if (!data) {
+        return res.status(404).send({ message: "You haven't accepted any donation yet." });
+    }
+    return res.status(200).send({
+        data
     });
 })
 
