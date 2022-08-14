@@ -6,14 +6,28 @@ const Jwt = pkg;
 const router = new express.Router();
 
 router.get("/", async (req, res) => {
-    const pageSize = 9;
-    var pagenumber = req.query.page;
-    var result = await Donation.find({ recipient: { $exists: false } })
+    let result = await Donation.find({ recipient: { $exists: false } })
 
     return res.status(200).send({
         data: result
     });
 });
+
+router.post("/search", async (req, res) => {
+    let filter ={ recipient: { $exists: false }}
+    if("city" in req.body){
+        filter['city']=req.body.city;
+    }
+    if("dateFilter" in req.body){
+        filter['dateFilter']=req.body.dateFilter;
+    }
+    let result = await Donation.find(filter);
+
+    return res.status(200).send({
+        data: result
+    });
+});
+
 
 router.post("/accept", async (req, res) => {
     /*
