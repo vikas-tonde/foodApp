@@ -19,7 +19,7 @@ router.post("/search", async (req, res) => {
         filter['city']=req.body.city;
     }
     if("dateFilter" in req.body){
-        filter['dateFilter']=req.body.dateFilter;
+        filter['dateAdded']=req.body.dateFilter;
     }
     let result = await Donation.find(filter);
 
