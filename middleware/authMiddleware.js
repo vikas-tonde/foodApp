@@ -17,7 +17,7 @@ const requireAuth = async (req, res, next) => {
     await Jwt.verify(token, "secret", async (err, decodedToken) => {
         if (err) {
             return res.status(401).send({
-                messaage: "Unauthenticated" + err.messaage
+                messaage: "Unauthenticated " + err.messaage
             });
         }
 

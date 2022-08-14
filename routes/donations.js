@@ -7,7 +7,7 @@ const Jwt = pkg;
 const router = new express.Router();
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, '../uploads');
+        cb(null, process.env.UPLOAD);
     },
     filename: function (req, file, cb) {
         cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
@@ -43,8 +43,8 @@ router.post("/add", upload.array('image'), async (req, res) => {
             expiry: element.expiry
         });
     });
-    if(req.files.length){
-        req.files.forEach(element=>{
+    if (req.files.length) {
+        req.files.forEach(element => {
             donation.images.push(element.path);
         });
     }
@@ -65,13 +65,8 @@ router.post("/add", upload.array('image'), async (req, res) => {
 router.get("/", async (req, res) => {
     const token = req.headers.authorization;
     const claims = await Jwt.verify(token, "secret");
-    const pageSize = 4;
-    var pagenumber = req.query.page;
-    var result = await Donation.find({ "donor": claims._id })
-        .limit(pageSize)
-        .skip((pagenumber - 1) * pageSize)
-        .exec();
 
+    var result = await Donation.find({ "donor": claims._id });
     return res.status(200).send({
         data: result
     });
@@ -94,18 +89,22 @@ router.get("/", async (req, res) => {
 // });
 
 
-router.get("/history", async (req, res) => {
-    const token = req.headers.authorization;
-    const claims = await Jwt.verify(token, "secret");
-    var result = await Donation.find({ donor: claims._id })
-
-    if (!result) {
-        return res.status(404).send({ message: "You haven't accepted any donation yet." });
-    }
-    return res.status(200).send({
-        data: result
-    });
-})
+// router.get("/history", async (req, res) => {
+//     const token = req.headers.authorization;
+//     const claims = await Jwt.verify(token, "secret");
+//     const pageSize = 9;
+//     var pagenumber = req.query.page;
+//     var result = await Donation.find({ donor: claims._id })
+//         .limit(pageSize)
+//         .skip((pagenumber - 1) * pageSize)
+//         .exec();
+//     if (!result) {
+//         return res.status(404).send({ message: "You haven't accepted any donation yet." });
+//     }
+//     return res.status(200).send({
+//         data: result
+//     });
+// })
 
 router.post("/history", async (req, res) => {
     /*
@@ -113,12 +112,10 @@ router.post("/history", async (req, res) => {
     */
     const token = req.headers.authorization;
     const claims = await Jwt.verify(token, "secret");
-    const pageSize = 9;
-    var pagenumber = req.query.page;
+    let to = req.body.to;
+    let from = req.body.from;
     var result = await Donation.find({ donor: claims._id })
-        .limit(pageSize)
-        .skip((pagenumber - 1) * pageSize)
-        .exec();
+
 
     if (!result) {
         return res.status(404).send({ message: "You haven't accepted any donation yet." });
