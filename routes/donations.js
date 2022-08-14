@@ -112,16 +112,19 @@ router.post("/history", async (req, res) => {
     */
     const token = req.headers.authorization;
     const claims = await Jwt.verify(token, "secret");
-    let to = req.body.to;
-    let from = req.body.from;
-    var result = await Donation.find({ donor: claims._id })
+    let to = new Date(req.body.to);
+    let from = new Date( req.body.from);
+    var data = await Donation.find({
+        donor: claims._id, dateAdded:{ $gte: from,
+        $lte: to}
+    })
 
 
-    if (!result) {
+    if (!data) {
         return res.status(404).send({ message: "You haven't accepted any donation yet." });
     }
     return res.status(200).send({
-        data: result
+        data
     });
 })
 
