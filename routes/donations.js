@@ -114,10 +114,12 @@ router.post("/history", async (req, res) => {
     const token = req.headers.authorization;
     const claims = await Jwt.verify(token, "secret");
     let to = new Date(req.body.to);
-    let from = new Date( req.body.from);
+    let from = new Date(req.body.from);
     var data = await Donation.find({
-        donor: claims._id, dateAdded:{ $gte: from,
-        $lte: to}
+        donor: claims._id, dateAdded: {
+            $gte: from,
+            $lte: to
+        }
     })
 
 

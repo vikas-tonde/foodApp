@@ -14,12 +14,14 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/search", async (req, res) => {
-    let filter ={ recipient: { $exists: false }}
-    if("city" in req.body){
-        filter['city']=req.body.city;
+    let filter = { recipient: { $exists: false } }
+    if ("city" in req.body) {
+        filter['city'] = req.body.city;
     }
-    if("dateFilter" in req.body){
-        filter['dateAdded']=req.body.dateFilter;
+    if ("dateFilter" in req.body) {
+        let d=new Date(req.body.dateFilter)
+        filter['dateAdded']={ $gte:new Date(req.body.dateFilter) , $lte:new Date(d.setDate(d.getDate()+1))};
+
     }
     let result = await Donation.find(filter);
 

@@ -1,4 +1,4 @@
 
 var a =new Date()
 
-console.log(a.toDateString());
+console.log(new Date(a.setDate(a.getDate()+1)));
