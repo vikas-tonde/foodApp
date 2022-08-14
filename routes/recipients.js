@@ -30,6 +30,17 @@ router.post("/search", async (req, res) => {
     });
 });
 
+router.get("/search", async (req, res) => {
+    let id = req.query.id;
+    let filter = { recipient: { $exists: false },_id=id}
+
+    let result = await Donation.find(filter);
+
+    return res.status(200).send({
+        data: result
+    });
+});
+
 
 router.post("/accept", async (req, res) => {
     /*
