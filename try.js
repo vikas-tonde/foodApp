@@ -1,5 +1,4 @@
-import moment from 'moment';
 
-// console.log(moment().format('L'))
+var a =new Date()
 
-console.log(new Date() - new Date('2022-08-10'));
+console.log(a.toDateString());
