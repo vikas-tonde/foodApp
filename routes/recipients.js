@@ -32,7 +32,7 @@ router.post("/search", async (req, res) => {
 
 router.get("/search", async (req, res) => {
     let id = req.query.id;
-    let filter = { recipient: { $exists: false },_id=id}
+    let filter = { recipient: { $exists: false },_id:id}
 
     let result = await Donation.find(filter);
 
