@@ -9,9 +9,6 @@ router.get("/", async (req, res) => {
     const pageSize = 9;
     var pagenumber = req.query.page;
     var result = await Donation.find({ recipient: { $exists: false } })
-        .limit(pageSize)
-        .skip((pagenumber - 1) * pageSize)
-        .exec();
 
     return res.status(200).send({
         data: result
@@ -39,9 +36,6 @@ router.get("/history", async (req, res) => {
     const pageSize = 9;
     var pagenumber = req.query.page;
     var result = await Donation.find({ recipient: claims._id })
-        .limit(pageSize)
-        .skip((pagenumber - 1) * pageSize)
-        .exec();
 
     if (!result) {
         return res.status(404).send({ message: "You haven't accepted any donation yet." });

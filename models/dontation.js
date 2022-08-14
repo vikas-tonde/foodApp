@@ -43,7 +43,11 @@ const donationSchema = new mongoose.Schema(
         },
         images: [{
             type: String
-        }]
+        }],
+        city: {
+            type: String,
+            required: true
+        }
     }, { collection: 'Donation', versionKey: false }
 );
 

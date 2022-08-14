@@ -34,7 +34,8 @@ router.post("/add", upload.array('image'), async (req, res) => {
     const donation = new Donation({
         donor: claims._id,
         location: req.body.location,
-        address: req.body.address
+        address: req.body.address,
+        city: req.body.city
     });
     req.body.items.forEach(element => {
         donation.items.push({
