@@ -6,26 +6,35 @@ import { Donation } from '../models/dontation.js'
 
 const router = new express.Router();
 
-router.get("/donations", async (req, res) => {
-    const pageSize = 4;
-    var pagenumber = req.query.page;
-    var result = await Donation.find()
-        .limit(pageSize)
-        .skip((pagenumber - 1) * pageSize)
-        .exec();
+router.post("/donations", async (req, res) => {
+    let d = new Date(req.body.dateFilter)
+    let result = {}
+    if ("dateFilter" in req.body) {
+        result = await Donation.find({ dateAdded: { $gte: new Date(req.body.dateFilter), $lte: new Date(d.setDate(d.getDate() + 1)) } });
+    }
+    else {
+        result = await Donation.find();
+    }
 
+    let r = []
+    for (let x of result) {
+        let u = await User.findOne({ _id: x.donor });
+
+        if (x.recipient) {
+            let recipient = await User.findOne({ _id: x.recipient });
+            r.push({ donor: u.name, "recipient": recipient.name, donation: x });
+        }
+        else
+            r.push({ donor: u.name, "recipient": '', donation: x });
+
+    }
     return res.status(200).send({
-        data: result
+        data: r
     });
 });
 
 router.get("/users", async (req, res) => {
-    const pageSize = 4;
-    var pagenumber = req.query.page;
     var result = await User.find()
-        .limit(pageSize)
-        .skip((pagenumber - 1) * pageSize)
-        .exec();
 
     return res.status(200).send({
         data: result
