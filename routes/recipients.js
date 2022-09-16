@@ -26,7 +26,7 @@ router.post("/search", async (req, res) => {
         filter['dateAdded'] = { $gte: new Date(req.body.dateFilter), $lte: new Date(d.setDate(d.getDate() + 1)) };
 
     }
-    let result = await Donation.find(filter);
+    let result = await Donation.findOne(filter);
 
     return res.status(200).send({
         data: result
