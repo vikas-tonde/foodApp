@@ -55,7 +55,7 @@ router.post("/accept", async (req, res) => {
     const claims = await Jwt.verify(token, "secret");
     var query = { '_id': req.body.id, 'recipient': { $exists: false } };
     var recipient = { 'recipient': claims._id }
-    let user = await User.findOne({_id:claims._id});
+    let user = await User.findOne({ _id: claims._id });
     Donation.findOneAndUpdate(query, recipient, async (err, doc) => {
         if (err)
             return res.status(424).send({ error: "Failed to allocate" });
@@ -78,10 +78,8 @@ router.post("/accept", async (req, res) => {
                     messaage: "Error occured"
                 });
             }
-            let result = await Donation.find({ recipient: { $exists: false } });
-            console.log(result)
             return res.status(200).send({
-                data: result
+                success: true
             });
         });
         // return res.send("Successfully Accepted... Please go to the location and receive.");
@@ -107,8 +105,8 @@ router.post("/history", async (req, res) => {
     */
     const token = req.headers.authorization;
     const claims = await Jwt.verify(token, "secret");
-    let d= new Date(req.body.to);
-    let to = new Date(req.body.to).setDate(d.getDate()+1);
+    let d = new Date(req.body.to);
+    let to = new Date(req.body.to).setDate(d.getDate() + 1);
     let from = new Date(req.body.from);
     var data = await Donation.find({
         recipient: claims._id, dateAdded: {

@@ -57,7 +57,7 @@ router.post("/add", upload.array('image'), async (req, res) => {
             });
         }
         return res.status(200).send({
-            messaage: "Success"
+            success: true
         });
     });
 
