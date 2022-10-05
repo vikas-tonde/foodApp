@@ -35,7 +35,12 @@ const donationSchema = new mongoose.Schema(
         },
         dateAdded: {
             type: Date,
-            default:new Date().toDateString()
+            default: () => {
+                let a = new Date();
+                a.setHours(a.getHours() + 5);
+                a.setMinutes(a.getMinutes() + 30);
+                return a;
+            }
         },
         address: {
             type: String,

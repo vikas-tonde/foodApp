@@ -18,16 +18,19 @@ router.get("/", async (req, res) => {
 
 router.post("/search", async (req, res) => {
     let filter = { recipient: { $exists: false } }
-    if ("city" in req.body) {
+    if ("city" in req.body && req.body.city != '') {
         filter['city'] = req.body.city;
     }
-    if ("dateFilter" in req.body) {
+    if ("dateFilter" in req.body && req.body.dateFilter != '') {
         let d = new Date(req.body.dateFilter)
-        filter['dateAdded'] = { $gte: new Date(req.body.dateFilter), $lte: new Date(d.setDate(d.getDate() + 1)) };
+        // d.setHours(to.getHours() + 5)
+        // d.setMinutes(to.getMinutes() + 30)
+        filter['dateAdded'] = { $gte: new Date(d), $lte: new Date(d.setDate(d.getDate() + 1)) };
 
     }
+    console.log(filter)
     let result = await Donation.find(filter);
-
+    console.log(result)
     return res.status(200).send({
         data: result
     });
